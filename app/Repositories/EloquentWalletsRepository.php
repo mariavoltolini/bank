@@ -20,4 +20,10 @@ class EloquentWalletsRepository implements WalletsRepository
     {
         return $this->wallet->where('user_id', $userId)->first();
     }
+
+    public function update(string $userId, array $arrUpdate): void
+    {
+        $wallet = $this->findByUserId($userId);
+        $wallet->update($arrUpdate);
+    }
 }

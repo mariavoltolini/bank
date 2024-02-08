@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('transaction_id')->references('id')->on('transactions');
             $table->foreignUuid('user_id')->references('id')->on('users');
             $table->integer('type');
+            $table->timestamps();
         });
     }
 

@@ -16,12 +16,6 @@ class EloquentMovementsRepository implements MovementsRepository
         return $this->movement->create($arrMovement);
     }
 
-    public function update(int $movementId, array $arrUpdate): void
-    {
-        $movement = $this->findMovementById($movementId);
-        $movement->update($arrUpdate);
-    }
-
     public function findMovementById(int $movementId): Movement
     {
         return $this->movement->findOrFail($movementId);
