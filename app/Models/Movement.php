@@ -10,8 +10,8 @@ class Movement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'value',
-        'payer_id',
-        'receiver_id',
+        'transaction_id',
+        'user_id',
+        'type',
     ];
 }

@@ -6,7 +6,7 @@ use App\Models\User;
 
 interface UsersRepository
 {
-    public function create(Array $request): User;
+    public function create(array $arrUser): User;
 
-    public function findByIdWithWallet(String $id): ?User;
+    public function findById(string $user_id): ?User;
 }

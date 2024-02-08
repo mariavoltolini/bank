@@ -2,14 +2,22 @@
 
 namespace App\Repositories;
 
-use App\Contracts\TransactionsRepository;
 use App\Contracts\WalletsRepository;
 use App\Models\Wallet;
 
 class EloquentWalletsRepository implements WalletsRepository
 {
-    public function create(Array $arrWallet) : Wallet
+    public function __construct(private Wallet $wallet)
     {
-        return Wallet::create($arrWallet);
+    }
+
+    public function create(array $walletData): Wallet
+    {
+        return $this->wallet->create($walletData);
+    }
+
+    public function findByUserId(string $userId): ?Wallet
+    {
+        return $this->wallet->where('user_id', $userId)->first();
     }
 }

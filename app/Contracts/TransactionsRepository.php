@@ -6,5 +6,5 @@ use App\Models\Transaction;
 
 interface TransactionsRepository
 {
-    public function create(Array $request): Transaction;
+    public function create(array $arrTransaction): Transaction;
 }

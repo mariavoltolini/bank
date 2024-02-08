@@ -7,8 +7,12 @@ use App\Models\Transaction;
 
 class EloquentTransactionsRepository implements TransactionsRepository
 {
-    public function create(Array $arrTransaction) : Transaction
+    public function __construct(private Transaction $transaction)
     {
-        return Transaction::create($arrTransaction);
+    }
+
+    public function create(array $arrTransaction): Transaction
+    {
+        return $this->transaction->create($arrTransaction);
     }
 }

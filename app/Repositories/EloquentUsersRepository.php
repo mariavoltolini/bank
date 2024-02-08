@@ -7,13 +7,17 @@ use App\Models\User;
 
 class EloquentUsersRepository implements UsersRepository
 {
-    public function create(Array $arrUser) : User
+    public function __construct(private User $user)
     {
-        return User::create($arrUser);
     }
 
-    public function findByIdWithWallet(String $id): ?User
+    public function create(array $userData): User
     {
-        return User::with('wallet')->find($id);
+        return $this->user->create($userData);
+    }
+
+    public function findById(string $userId): ?User
+    {
+        return $this->user->find($userId);
     }
 }
