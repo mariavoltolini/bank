@@ -13,7 +13,8 @@ class UsersService
 {
     public function __construct(
         private UsersRepository $usersRepository,
-        private WalletsRepository $walletsRepository
+        private WalletsRepository $walletsRepository,
+        private UserTypeVerificationService $userTypeVerificationService
         )
     {
     }
@@ -23,7 +24,8 @@ class UsersService
         DB::beginTransaction();
 
         try {
-            $type = $this->verifyTypeUser($user['type']);
+            $type = $this->userTypeVerificationService->verify($user['type']);
+
             $id = Uuid::uuid4()->toString();
 
             $arrayUser = [
@@ -48,18 +50,6 @@ class UsersService
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
-        }
-    }
-
-    private function verifyTypeUser(String $type) : int
-    {
-        switch ($type) {
-            case 'user':
-                return 1;
-            case 'merchant':
-                return 2;
-            default:
-                throw new InvalidArgumentException("invalid user type", Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }
