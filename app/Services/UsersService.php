@@ -12,6 +12,7 @@ class UsersService
     public function __construct(private UsersRepository $repository)
     {
     }
+
     public function create(Array $user) : void
     {
         $type = $this->verifyTypeUser($user['type']);

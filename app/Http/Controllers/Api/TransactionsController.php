@@ -10,6 +10,5 @@ class TransactionsController extends Controller
 {
     public function store(TransactionsRequest $request)
     {
-
     }
 }

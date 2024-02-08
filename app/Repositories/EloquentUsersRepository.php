@@ -11,5 +11,4 @@ class EloquentUsersRepository implements UsersRepository
     {
         return User::create($arrUser);
     }
-
 }
