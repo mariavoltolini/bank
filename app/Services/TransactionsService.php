@@ -19,7 +19,8 @@ class TransactionsService
         private WalletsService $walletsService,
         private UserPayerVerificationService $userPayerVerificationService,
         private BalanceUserVerificationService $balanceUserVerificationService,
-        private TransactionAuthorizationVerificationService $transactionAuthorizationVerificationService
+        private TransactionAuthorizationVerificationService $transactionAuthorizationVerificationService,
+        private SendEmailService $sendEmailService
     ) {
     }
 
@@ -47,6 +48,8 @@ class TransactionsService
             $this->transactionAuthorizationVerificationService->verify($transaction);
 
             DB::commit();
+
+            $this->sendEmailService->sendEmail($newTransaction->id, $transaction['receiver_id']);
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
