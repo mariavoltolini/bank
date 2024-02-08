@@ -25,9 +25,9 @@ class TransactionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value' => 'required|float',
-            'payer_id' => 'required|string',
-            'receiver_id' => 'required|string',
+            'value' => 'required|numeric',
+            'payer_id' => 'required|string|exists:users,id',
+            'receiver_id' => 'required|string|exists:users,id',
         ];
     }
 

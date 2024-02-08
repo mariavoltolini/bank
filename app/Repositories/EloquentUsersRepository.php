@@ -11,4 +11,9 @@ class EloquentUsersRepository implements UsersRepository
     {
         return User::create($arrUser);
     }
+
+    public function findByIdWithWallet(String $id): ?User
+    {
+        return User::with('wallet')->find($id);
+    }
 }

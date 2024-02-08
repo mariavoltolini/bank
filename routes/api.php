@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\UsersController;
+use App\Http\Controllers\Api\v1\TransactionsController;
+use App\Http\Controllers\Api\v1\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::controller(UsersController::class)->group(function(){
-   Route::post('/user', 'store');
+   Route::post('/v1/users', 'store');
+});
+
+Route::controller(TransactionsController::class)->group(function(){
+    Route::post('/v1/transactions', 'store');
 });

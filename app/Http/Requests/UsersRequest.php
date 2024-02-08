@@ -28,7 +28,7 @@ class UsersRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'document' => 'required|string|unique:users,document',
-            'password' => 'required|string',
+            'password' => 'required|string|min:6',
             'type' => 'required|string|in:user,merchant',
         ];
     }

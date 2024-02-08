@@ -43,4 +43,9 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
 }
