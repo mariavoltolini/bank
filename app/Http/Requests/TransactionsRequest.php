@@ -27,7 +27,7 @@ class TransactionsRequest extends FormRequest
         return [
             'value' => 'required|numeric|gt:0',
             'payer_id' => 'required|string|exists:users,id',
-            'receiver_id' => 'required|string|exists:users,id',
+            'receiver_id' => 'required|string|exists:users,id|different:payer_id',
         ];
     }
 
