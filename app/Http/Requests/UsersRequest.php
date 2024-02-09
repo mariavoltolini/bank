@@ -27,8 +27,8 @@ class UsersRequest extends FormRequest
         return [
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'document' => 'required|string|unique:users,document',
-            'password' => 'required|string|min:6',
+            'document' => 'required|string|unique:users,document|regex:/^[0-9]+$/|min:11|max:14',
+            'password' => 'required|string|min:6|max:12',
             'type' => 'required|string|in:user,merchant',
         ];
     }
