@@ -20,11 +20,11 @@ class UsersController extends Controller
             $this->service->create($userData);
 
             return response()->json([
-                'message' => 'User created successfully',
+                'message' => 'User created successfully!',
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Failed to create user',
+                'message' => 'Failed to create user!',
                 'errors' => $e->getMessage(),
             ], 500);
         }
