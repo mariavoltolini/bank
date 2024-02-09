@@ -4,30 +4,31 @@ namespace App\Services;
 
 use App\Contracts\UsersRepository;
 use App\Contracts\WalletsRepository;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\DatabaseManager;
 use Ramsey\Uuid\Uuid;
 
 class UsersService
 {
     public function __construct(
-        private UsersRepository $usersRepository,
-        private WalletsRepository $walletsRepository,
-        private UserTypeVerificationService $userTypeVerificationService
+        private UsersRepository $usersRepo,
+        private WalletsRepository $walletsRepo,
+        private UserTypeVerificationService $userTypeVerifyServ,
+        private DatabaseManager $database
         )
     {
     }
 
-    public function create(array $user): void
+    public function createUser(array $user): void
     {
-        DB::beginTransaction();
+        $this->database->beginTransaction();
 
         try {
-            $type = $this->userTypeVerificationService->verify($user['type']);
+            $type = $this->userTypeVerifyServ->verify($user['type']);
 
-            $id = Uuid::uuid4()->toString();
+            $uuid = Uuid::uuid4()->toString();
 
             $arrayUser = [
-                'id' => $id,
+                'id' => $uuid,
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'password' => $user['password'],
@@ -35,18 +36,18 @@ class UsersService
                 'document' => $user['document']
             ];
 
-            $this->usersRepository->create($arrayUser);
+            $this->usersRepo->create($arrayUser);
 
             $arrayWallet = [
-                'user_id' => $id,
+                'user_id' => $uuid,
                 'balance' => 0
             ];
 
-            $this->walletsRepository->create($arrayWallet);
+            $this->walletsRepo->create($arrayWallet);
 
-            DB::commit();
+            $this->database->commit();
         } catch (\Exception $e) {
-            DB::rollBack();
+            $this->database->rollBack();
             throw $e;
         }
     }

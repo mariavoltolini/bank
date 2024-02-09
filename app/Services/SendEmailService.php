@@ -8,9 +8,9 @@ use App\Contracts\UsersRepository;
 class SendEmailService
 {
     public function __construct(
-        private ApiService $apiService,
-        private UsersRepository $usersRepository,
-        private EmailsTransactionsRepository $emailsTransactionsRepository
+        private ApiService $apiServ,
+        private UsersRepository $usersRepo,
+        private EmailsTransactionsRepository $emailTransactionsRepo
     ) {
     }
 
@@ -18,11 +18,11 @@ class SendEmailService
     {
         $url = env('TRANSACTION_SEND_EMAIL_URL');
 
-        $user = $this->usersRepository->findById($userId);
+        $user = $this->usersRepo->findById($userId);
 
         $emailData = $this->prepareEmailData($user);
 
-        $response = $this->apiService->post($url, $emailData);
+        $response = $this->apiServ->post($url, $emailData);
 
         if ($response->successful()) {
             $this->createEmailTransactionLog($transactionId, true);
@@ -48,6 +48,6 @@ class SendEmailService
             'status' => $status
         ];
 
-        $this->emailsTransactionsRepository->create($logData);
+        $this->emailTransactionsRepo->create($logData);
     }
 }

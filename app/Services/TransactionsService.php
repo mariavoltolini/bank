@@ -5,51 +5,52 @@ namespace App\Services;
 use App\Contracts\TransactionsRepository;
 use App\Contracts\UsersRepository;
 use App\Contracts\WalletsRepository;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\DatabaseManager;
 
 class TransactionsService
 {
     public function __construct(
-        private TransactionsRepository $transactionsRepository,
-        private UsersRepository $usersRepository,
-        private WalletsRepository $walletsRepository,
-        private MovementsService $movementsService,
-        private WalletsService $walletsService,
-        private UserPayerVerificationService $userPayerVerificationService,
-        private BalanceUserVerificationService $balanceUserVerificationService,
-        private TransactionAuthorizationVerificationService $transactionAuthorizationVerificationService,
-        private SendEmailService $sendEmailService
+        private TransactionsRepository $transactionsRepo,
+        private UsersRepository $usersRepo,
+        private WalletsRepository $walletsRepo,
+        private MovementsService $movementsServ,
+        private WalletsService $walletsServ,
+        private UserPayerVerificationService $payerVerifyServ,
+        private BalanceUserVerificationService $balanceVerifyServ,
+        private TransactionVerificationService $transactionVerifyServ,
+        private SendEmailService $sendEmailServ,
+        private DatabaseManager $database
     ) {
     }
 
-    public function create(array $transaction): void
+    public function createTransaction(array $transaction): void
     {
-        $payer = $this->usersRepository->findById($transaction['payer_id']);
+        $payer = $this->usersRepo->findById($transaction['payer_id']);
 
-        $payerWallet = $this->walletsRepository->findByUserId($transaction['payer_id']);
+        $payerWallet = $this->walletsRepo->findByUserId($transaction['payer_id']);
 
-        $this->userPayerVerificationService->verify($payer->type);
+        $this->payerVerifyServ->verify($payer->type);
 
-        $this->balanceUserVerificationService->verify($payerWallet->balance, $transaction['value']);
+        $this->balanceVerifyServ->verify($payerWallet->balance, $transaction['value']);
 
         try {
-            DB::beginTransaction();
+            $this->database->beginTransaction();
 
-            $newTransaction = $this->transactionsRepository->create($transaction);
+            $newTransaction = $this->transactionsRepo->create($transaction);
 
-            $this->movementsService->create($transaction['payer_id'], $transaction['receiver_id'], $newTransaction->id);
+            $this->movementsServ->create($transaction['payer_id'], $transaction['receiver_id'], $newTransaction->id);
 
-            $this->walletsService->update($transaction['payer_id'], $transaction['value'], 'debit');
+            $this->walletsServ->update($transaction['payer_id'], $transaction['value'], 'debit');
 
-            $this->walletsService->update($transaction['receiver_id'], $transaction['value'], 'credit');
+            $this->walletsServ->update($transaction['receiver_id'], $transaction['value'], 'credit');
 
-            $this->transactionAuthorizationVerificationService->verify($transaction);
+            $this->transactionVerifyServ->verify($transaction);
 
-            DB::commit();
+            $this->database->commit();
 
-            $this->sendEmailService->sendEmail($newTransaction->id, $transaction['receiver_id']);
+            $this->sendEmailServ->sendEmail($newTransaction->id, $transaction['receiver_id']);
         } catch (\Exception $e) {
-            DB::rollback();
+            $this->database->rollback();
             throw $e;
         }
     }

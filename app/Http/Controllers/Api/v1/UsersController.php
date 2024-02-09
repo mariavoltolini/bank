@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 
 class UsersController extends Controller
 {
-    public function __construct(private UsersService $service)
+    public function __construct(private UsersService $usersServ)
     {
     }
 
@@ -17,7 +17,7 @@ class UsersController extends Controller
     {
         try {
             $userData = $request->validated();
-            $this->service->create($userData);
+            $this->usersServ->createUser($userData);
 
             return response()->json([
                 'message' => 'User created successfully!',

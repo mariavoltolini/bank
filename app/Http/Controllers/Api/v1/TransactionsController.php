@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 
 class TransactionsController extends Controller
 {
-    public function __construct(private TransactionsService $service)
+    public function __construct(private TransactionsService $transactionServ)
     {
     }
 
@@ -17,7 +17,7 @@ class TransactionsController extends Controller
     {
         try {
             $transactionData = $request->validated();
-            $this->service->create($transactionData);
+            $this->transactionServ->createTransaction($transactionData);
 
             return response()->json([
                 'message' => 'Transaction created successfully!',

@@ -5,9 +5,9 @@ namespace App\Services;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 
-class TransactionAuthorizationVerificationService
+class TransactionVerificationService
 {
-    public function __construct(private ApiService $apiService)
+    public function __construct(private ApiService $apiServ)
     {
     }
 
@@ -15,7 +15,7 @@ class TransactionAuthorizationVerificationService
     {
         $transactionAuthUrl = env('TRANSACTION_AUTH_URL');
 
-        $return = $this->apiService->post($transactionAuthUrl, $transaction);
+        $return = $this->apiServ->post($transactionAuthUrl, $transaction);
 
         if ($return->successful()) {
             $jsonData = $return->json();

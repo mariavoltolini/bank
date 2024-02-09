@@ -9,13 +9,13 @@ use Illuminate\Http\JsonResponse;
 class WalletsService
 {
     public function __construct(
-        private WalletsRepository $walletsRepository
+        private WalletsRepository $walletsRepo
     ) {
     }
 
     public function update(string $userId, float $value, string $type)
     {
-        $wallet = $this->walletsRepository->findByUserId($userId);
+        $wallet = $this->walletsRepo->findByUserId($userId);
 
         if (!$wallet) {
             $response = new JsonResponse([
@@ -27,7 +27,7 @@ class WalletsService
 
         $newBalance = $this->calculateNewBalance($value, $wallet->balance, $type);
 
-        $this->walletsRepository->update($userId, ['balance' => $newBalance]);
+        $this->walletsRepo->update($userId, ['balance' => $newBalance]);
     }
 
     private function calculateNewBalance(float $transactionValue, float $walletValue, string $type) : ?int

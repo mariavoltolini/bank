@@ -7,7 +7,7 @@ use App\Contracts\MovementsRepository;
 class MovementsService
 {
     public function __construct(
-        private MovementsRepository $movementsRepository
+        private MovementsRepository $movementsRepo
     ) {
     }
 
@@ -19,15 +19,15 @@ class MovementsService
 
     private function prepareArrayAndCreateMovement(string $userId, int $transactionId, string $type): void
     {
-        $type_movement = $this->verifyMovementType($type);
+        $typeMovement = $this->verifyMovementType($type);
 
         $arrMovement = [
             'transaction_id' => $transactionId,
-            'type' => $type_movement,
+            'type' => $typeMovement,
             'user_id' => $userId
         ];
 
-        $this->movementsRepository->create($arrMovement);
+        $this->movementsRepo->create($arrMovement);
     }
 
     private function verifyMovementType(string $type): ?int
