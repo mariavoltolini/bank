@@ -40,6 +40,23 @@ class CreateUserTest extends TestCase
         ]);
     }
 
+    public function testCreateUserWithEmailError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'email' => 'ddddd',
+            'document' => $user->document,
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['email']);
+    }
+
     public function testCreateUserWithTypeError()
     {
         $user = User::factory()->make();
@@ -57,7 +74,7 @@ class CreateUserTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['type']);
     }
 
-    public function testCreateUserWithDocumentError()
+    public function testCreateUserWithDocumentCharacterError()
     {
         $user = User::factory()->make();
 
@@ -67,6 +84,40 @@ class CreateUserTest extends TestCase
             'name' => $user->name,
             'email' => $user->email,
             'document' => '123456789.3',
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['document']);
+    }
+
+    public function testCreateUserWithDocumentMinError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'document' => '1234567911',
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['document']);
+    }
+
+    public function testCreateUserWithDocumentMaxError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'document' => '123456791112345',
             'password' => 'password',
             'type' => $type,
         ]);
