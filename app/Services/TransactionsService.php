@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Contracts\TransactionsRepository;
 use App\Contracts\UsersRepository;
 use App\Contracts\WalletsRepository;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class TransactionsService

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Contracts\MovementsRepository;
-use InvalidArgumentException;
 
 class MovementsService
 {

@@ -4,8 +4,6 @@ namespace App\Services;
 
 use App\Contracts\UsersRepository;
 use App\Contracts\WalletsRepository;
-use InvalidArgumentException;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 

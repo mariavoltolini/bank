@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionsRequest;
 use App\Services\TransactionsService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TransactionsController extends Controller
 {
