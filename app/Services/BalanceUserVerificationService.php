@@ -12,7 +12,7 @@ class BalanceUserVerificationService
         if ($transactionValue > $balance) {
             $response = new JsonResponse([
                 'message' => 'Insufficient balance!',
-            ], 400);
+            ], 403);
 
             throw new HttpResponseException($response);
         }

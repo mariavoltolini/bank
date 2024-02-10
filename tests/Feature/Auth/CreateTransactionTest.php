@@ -21,18 +21,11 @@ class CreateTransactionTest extends TestCase
      */
     public function testCreateTransaction()
     {
-        $uuidPayer = Uuid::uuid4()->toString();
-        $uuidReceiver = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidPayer, 'type' => 1]);
-        User::factory()->create(['id' => $uuidReceiver]);
-
-        Wallet::factory()->create(['user_id' => $uuidPayer]);
-        Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
-            'payer_id' => $uuidPayer,
-            'receiver_id' => $uuidReceiver,
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['receiver_id'],
             'value' => 15,
         ]);
 
@@ -59,15 +52,11 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithPayerFormatError()
     {
-        $uuidReceiver = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidReceiver]);
-
-        Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
             'payer_id' => 1111,
-            'receiver_id' => $uuidReceiver,
+            'receiver_id' => $uuid['receiver_id'],
             'value' => 15,
         ]);
 
@@ -76,17 +65,10 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithoutPayerError()
     {
-        $uuidPayer = Uuid::uuid4()->toString();
-        $uuidReceiver = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidPayer, 'type' => 1]);
-        User::factory()->create(['id' => $uuidReceiver]);
-
-        Wallet::factory()->create(['user_id' => $uuidPayer]);
-        Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
-            'receiver_id' => $uuidReceiver,
+            'receiver_id' => $uuid['receiver_id'],
             'value' => 15,
         ]);
 
@@ -95,15 +77,11 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithPayerReceiverError()
     {
-        $uuid = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuid, 'type' => 1]);
-
-        Wallet::factory()->create(['user_id' => $uuid]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
-            'payer_id' => $uuid,
-            'receiver_id' => $uuid,
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['payer_id'],
             'value' => 15,
         ]);
 
@@ -130,14 +108,10 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithReceiverFormatError()
     {
-        $uuidPayer = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidPayer, 'type' => 1]);
-
-        Wallet::factory()->create(['user_id' => $uuidPayer]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
-            'payer_id' => $uuidPayer,
+            'payer_id' => $uuid['payer_id'],
             'receiver_id' => 1111,
             'value' => 15,
         ]);
@@ -147,17 +121,10 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithoutReceiverError()
     {
-        $uuidPayer = Uuid::uuid4()->toString();
-        $uuidReceiver = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidPayer, 'type' => 1]);
-        User::factory()->create(['id' => $uuidReceiver]);
-
-        Wallet::factory()->create(['user_id' => $uuidPayer]);
-        Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
-            'payer_id' => $uuidPayer,
+            'payer_id' => $uuid['payer_id'],
             'value' => 15,
         ]);
 
@@ -166,18 +133,11 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithPayerTypeError()
     {
-        $uuidPayer = Uuid::uuid4()->toString();
-        $uuidReceiver = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidPayer, 'type' => 2]);
-        User::factory()->create(['id' => $uuidReceiver]);
-
-        Wallet::factory()->create(['user_id' => $uuidPayer]);
-        Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
+        $uuid = $this->createUserAndWallet(2);
 
         $response = $this->postJson('/api/v1/transactions', [
-            'payer_id' => $uuidPayer,
-            'receiver_id' => $uuidReceiver,
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['receiver_id'],
             'value' => 15,
         ]);
 
@@ -186,18 +146,11 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithValueZeroError()
     {
-        $uuidPayer = Uuid::uuid4()->toString();
-        $uuidReceiver = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidPayer, 'type' => 1]);
-        User::factory()->create(['id' => $uuidReceiver]);
-
-        Wallet::factory()->create(['user_id' => $uuidPayer]);
-        Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
-            'payer_id' => $uuidPayer,
-            'receiver_id' => $uuidReceiver,
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['receiver_id'],
             'value' => 0,
         ]);
 
@@ -206,40 +159,69 @@ class CreateTransactionTest extends TestCase
 
     public function testCreateTransactionWithValueTypeError()
     {
-        $uuidPayer = Uuid::uuid4()->toString();
-        $uuidReceiver = Uuid::uuid4()->toString();
-
-        User::factory()->create(['id' => $uuidPayer, 'type' => 1]);
-        User::factory()->create(['id' => $uuidReceiver]);
-
-        Wallet::factory()->create(['user_id' => $uuidPayer]);
-        Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
+        $uuid = $this->createUserAndWallet();
 
         $response = $this->postJson('/api/v1/transactions', [
-            'payer_id' => $uuidPayer,
-            'receiver_id' => $uuidReceiver,
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['receiver_id'],
             'value' => "R$12.00",
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['value']);
     }
 
+    public function testCreateTransactionWithValueNotValidError()
+    {
+        $uuid = $this->createUserAndWallet();
+
+        $response = $this->postJson('/api/v1/transactions', [
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['receiver_id'],
+            'value' => 12.99999999,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['value']);
+    }
+
+    public function testCreateTransactionWithBalanceError()
+    {
+        $uuid = $this->createUserAndWallet();
+
+        $response = $this->postJson('/api/v1/transactions', [
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['receiver_id'],
+            'value' => 1000,
+        ]);
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
     public function testCreateTransactionWithoutValueError()
+    {
+       $uuid = $this->createUserAndWallet();
+
+        $response = $this->postJson('/api/v1/transactions', [
+            'payer_id' => $uuid['payer_id'],
+            'receiver_id' => $uuid['receiver_id'],
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['value']);
+    }
+
+    public function createUserAndWallet($type = 1)
     {
         $uuidPayer = Uuid::uuid4()->toString();
         $uuidReceiver = Uuid::uuid4()->toString();
 
-        User::factory()->create(['id' => $uuidPayer, 'type' => 1]);
+        User::factory()->create(['id' => $uuidPayer, 'type' => $type]);
         User::factory()->create(['id' => $uuidReceiver]);
 
         Wallet::factory()->create(['user_id' => $uuidPayer]);
         Wallet::factory()->create(['user_id' =>  $uuidReceiver]);
 
-        $response = $this->postJson('/api/v1/transactions', [
+        return [
             'payer_id' => $uuidPayer,
-            'receiver_id' => $uuidReceiver,
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['value']);
+            'receiver_id' => $uuidReceiver
+        ];
     }
 }
