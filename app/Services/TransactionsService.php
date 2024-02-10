@@ -38,7 +38,7 @@ class TransactionsService
 
             $newTransaction = $this->transactionsRepo->create($transaction);
 
-            $this->movementsServ->create($transaction['payer_id'], $transaction['receiver_id'], $newTransaction->id);
+            $this->movementsServ->create($transaction['payer_id'], $transaction['receiver_id'], $newTransaction->id, $transaction['value']);
 
             $this->walletsServ->update($transaction['payer_id'], $transaction['value'], 'debit');
 

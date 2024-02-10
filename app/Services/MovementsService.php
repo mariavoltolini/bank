@@ -11,13 +11,13 @@ class MovementsService
     ) {
     }
 
-    public function create(string $payerId, string $receiverId, int $transactionId): void
+    public function create(string $payerId, string $receiverId, int $transactionId, float $value): void
     {
-        $this->prepareArrayAndCreateMovement($payerId, $transactionId, 'debit');
-        $this->prepareArrayAndCreateMovement($receiverId, $transactionId, 'credit');
+        $this->prepareArrayAndCreateMovement($payerId, $transactionId, 'debit', $value);
+        $this->prepareArrayAndCreateMovement($receiverId, $transactionId, 'credit', $value);
     }
 
-    private function prepareArrayAndCreateMovement(string $userId, int $transactionId, string $type): void
+    private function prepareArrayAndCreateMovement(string $userId, int $transactionId, string $type, float $value): void
     {
         $typeMovement = $this->verifyMovementType($type);
 
@@ -26,6 +26,8 @@ class MovementsService
             'type' => $typeMovement,
             'user_id' => $userId
         ];
+
+        $arrMovement['value'] = $typeMovement === 1 ? -$value : $value ;
 
         $this->movementsRepo->create($arrMovement);
     }
