@@ -34,10 +34,44 @@ class CreateUserTest extends TestCase
         $response->assertStatus(Response::HTTP_CREATED);
 
         $this->assertDatabaseHas('users', [
+            'name' => $user->name,
             'email' => $user->email,
             'document' => $user->document,
             'type' => $user->type,
         ]);
+    }
+
+    public function testCreateUserWithWithoutNameError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'email' => $user->email,
+            'document' => $user->document,
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['name']);
+    }
+
+    public function testCreateUserWithNoNameError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => " ",
+            'email' => $user->email,
+            'document' => $user->document,
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['name']);
     }
 
     public function testCreateUserWithEmailError()
@@ -49,6 +83,22 @@ class CreateUserTest extends TestCase
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
             'email' => 'ddddd',
+            'document' => $user->document,
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['email']);
+    }
+
+    public function testCreateUserWithWithoutEmailError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
             'document' => $user->document,
             'password' => 'password',
             'type' => $type,
@@ -69,6 +119,22 @@ class CreateUserTest extends TestCase
             'document' => $user->document,
             'password' => 'password',
             'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['type']);
+    }
+
+    public function testCreateUserWithWithoutTypeError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'document' => $user->document,
+            'password' => 'password',
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['type']);
@@ -125,6 +191,22 @@ class CreateUserTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['document']);
     }
 
+    public function testCreateUserWithWithoutDocumentError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['document']);
+    }
+
     public function testCreateUserWithPasswordError()
     {
         $user = User::factory()->make();
@@ -136,6 +218,22 @@ class CreateUserTest extends TestCase
             'email' => $user->email,
             'document' => $user->document,
             'password' => '1234',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['password']);
+    }
+
+    public function testCreateUserWithWithoutPasswordError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'document' => $user->document,
             'type' => $type,
         ]);
 

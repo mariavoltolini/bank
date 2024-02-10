@@ -25,7 +25,7 @@ class WalletFactory extends Factory
             'user_id' => function () {
                 return \App\Models\User::factory()->create()->id;
             },
-            'balance' => $this->faker->randomFloat(50, 0, 500),
+            'balance' => $this->faker->randomFloat(50, 50, 500),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
