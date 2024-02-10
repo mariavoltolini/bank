@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services;
+namespace Tests\Unit;
 
 use App\Services\UserTypeVerificationService;
 use Illuminate\Http\Exceptions\HttpResponseException;
