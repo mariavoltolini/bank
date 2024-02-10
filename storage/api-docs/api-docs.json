@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Bank Pay API",
-        "description": "This API is structured to carry out transactions between clients, using PHP as the language and Laravel as the Framework. In addition, it has unit and integrated tests to ensure the correct functioning of the application. The application was carried out following the RestAPI models.",
+        "description": "This API is structured to carry out transactions between users.",
         "contact": {
             "name": "Maria Luiza",
             "email": "malu.voltolini@outlook.com"
@@ -83,7 +83,7 @@
                         }
                     },
                     "403": {
-                        "description": "Unauthorized transaction or insufficient balance or incorrect payer type",
+                        "description": "Unauthorized transaction",
                         "content": {
                             "application/json": {
                                 "schema": {
