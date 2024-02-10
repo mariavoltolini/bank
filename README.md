@@ -109,8 +109,21 @@ Vendor/: Contém as dependências do projeto, gerenciadas pelo Composer.
 ```
 
 ---
+
 ## Documentação 
 
 - A documentação do projeto foi elaborada com o uso do Swagger, acessível através do seguinte caminho: "/api/documentation". 
 
 ![Swagger Documentation](public/img/swagger.png)
+
+---
+## Tecnologias
+
+- Laravel
+- PHP
+- MySQL
+- PHPUnit
+- Swagger
+
+
+
