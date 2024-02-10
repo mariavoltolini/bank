@@ -1,66 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API Bank Pay  
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+ Essa API é estruturada para realizar transações entre clientes.
+ 
+---
+## Regras de Negócio   
 
-## About Laravel
+ 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Cadastro de usuário:  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Existem dois tipos de clientes: regulares e comerciantes.  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Nome Completo, CPF/CNPJ, E-mail e Senha são campos obrigatórios para ambos os tipos de usuários: usuários regulares e comerciantes.  
 
-## Learning Laravel
+- CPF/CNPJ (Cadastro Nacional da Pessoa Jurídica) e e-mails são únicos no sistema, permitindo apenas um cadastro por CPF ou endereço de e-mail.  
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+  
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Transferência de dinheiro:  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Os usuários podem enviar dinheiro (fazer transferências) tanto para comerciantes quanto para outros usuários.  
 
-## Laravel Sponsors
+- Os comerciantes recebem apenas transferências; eles não podem enviar dinheiro para ninguém.  
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+  
 
-### Premium Partners
+### Validação de saldo:  
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- Antes de concluir uma transferência, o sistema valida se o cliente possui saldo suficiente em sua carteira.  
 
-## Contributing
+  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Autorização Externa:  
 
-## Code of Conduct
+- Antes de finalizar uma transferência, o sistema consulta um serviço de autorização externo para autorizar ou não a transferência.  
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+  
 
-## Security Vulnerabilities
+### Tratamento de transações:  
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+ - A operação de transferência é uma transação, ou seja, é reversível em caso de alguma inconsistência e o valor devolvido a carteira do cliente.  
 
-## License
+  
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Notificação sobre recibo de pagamento:  
+
+- Ao receber o pagamento, tanto usuários quanto comerciantes deverão receber uma notificação. As notificações são enviadas por e-mail por meio de um serviço terceirizado.   
+
+- O serviço de notificação de terceiros pode ocasionalmente estar indisponível ou instável, por isso, é gerado um registro no banco de dados, para salvar essa informação.  
+
+  
+
+### Serviço RESTFul:  
+
+- O sistema é concebido como um serviço RESTFul para facilitar a comunicação e integração com sistemas externos. 
+
+ 
+---
+## Estrutura do projeto 
+
+- Esse projeto segue uma abordagem MVC modificada, adaptada às necessidades de uma API REST, seguindo os princípios de separação de responsabilidades. Além disso, também segue os padrões de Service Layer e Repository Pattern. 
+
+ 
+
+### Principais estruturas do projeto 
+
+```sh 
+
+App/: Contém a lógica principal da aplicação. 
+
+├── Console/: Armazena comandos personalizados para a interface de linha de comando Artisan. 
+
+├── Contracts/: Contém todas as interfaces que definem os contratos para as classes em diferentes partes da aplicação. 
+
+├── Exceptions/: Contém classes para lidar com exceções personalizadas da aplicação. 
+
+└── HTTP/: Este diretório contém controladores, middlewares e classes de validação de requisições HTTP. 
+
+    ├── Controllers/: Recebem as requisições HTTP da aplicação e respondem com a lógica adequada. 
+
+    ├── Middleware/: Funcionalidades intermediárias entre as requisições HTTP e as respostas da aplicação. 
+
+    └── Requests/: Classes que lidam com a validação das requisições HTTP. 
+
+├── Models/: Modelos que representam as tabelas do banco de dados. 
+
+├── Providers/: Provedores de serviços da aplicação, responsáveis por inicializar e registrar serviços durante o bootstrap da aplicação. 
+
+├── Repositories/: Classes responsáveis pela comunicação com o banco de dados, seguindo o padrão Repository. 
+
+└── Services/: Classes que contêm a lógica de negócios da aplicação. 
+
+Database/: Contém arquivos relacionados ao banco de dados da aplicação. 
+
+├── Factories/: Arquivos de fábrica usados para gerar dados fictícios durante o desenvolvimento e teste da aplicação. 
+
+├── Migrations/: Arquivos de migração que definem a estrutura do banco de dados e as alterações nas tabelas. 
+
+└── Seeders/: Classes usadas para popular o banco de dados com dados iniciais durante a inicialização. 
+
+Routes/: Contém todas as definições de rotas da aplicação. 
+
+Tests/: Armazena os testes de unidade e de integração da aplicação. 
+
+Vendor/: Contém as dependências do projeto, gerenciadas pelo Composer. 
+
+```
+
+---
+## Documentação 
+
+- A documentação do projeto foi elaborada com o uso do Swagger, acessível através do seguinte caminho: "/api/documentation". 
+
+![Swagger Documentation](public/img/swagger.png)
