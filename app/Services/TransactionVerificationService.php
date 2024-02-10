@@ -27,7 +27,7 @@ class TransactionVerificationService
 
         $response = new JsonResponse([
             'message' => 'Unauthorized transaction!',
-        ], 400);
+        ], 403);
 
         throw new HttpResponseException($response);
     }

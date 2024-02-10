@@ -25,8 +25,12 @@ class SendEmailService
         $response = $this->apiServ->post($url, $emailData);
 
         if ($response->successful()) {
-            $this->createEmailTransactionLog($transactionId, true);
-            return true;
+            $jsonData = $response->json();
+
+            if ($jsonData['message'] === true) {
+                $this->createEmailTransactionLog($transactionId, true);
+                return true;
+            }
         }
 
         $this->createEmailTransactionLog($transactionId, false);
