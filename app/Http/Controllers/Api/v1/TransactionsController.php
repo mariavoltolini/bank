@@ -13,20 +13,13 @@ class TransactionsController extends Controller
     {
     }
 
-    public function store(TransactionsRequest $request) : JsonResponse
+    public function store(TransactionsRequest $request): JsonResponse
     {
-        try {
-            $transactionData = $request->validated();
-            $this->transactionServ->createTransaction($transactionData);
+        $transactionData = $request->validated();
+        $this->transactionServ->createTransaction($transactionData);
 
-            return response()->json([
-                'message' => 'Transaction created successfully!',
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to create transaction!',
-                'errors' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Transaction created successfully!',
+        ], 201);
     }
 }

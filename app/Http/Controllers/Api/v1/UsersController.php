@@ -13,20 +13,13 @@ class UsersController extends Controller
     {
     }
 
-    public function store(UsersRequest $request) : JsonResponse
+    public function store(UsersRequest $request): JsonResponse
     {
-        try {
-            $userData = $request->validated();
-            $this->usersServ->createUser($userData);
+        $userData = $request->validated();
+        $this->usersServ->createUser($userData);
 
-            return response()->json([
-                'message' => 'User created successfully!',
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to create user!',
-                'errors' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'User created successfully!',
+        ], 201);
     }
 }
