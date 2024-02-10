@@ -30,7 +30,7 @@ class WalletsService
         $this->walletsRepo->update($userId, ['balance' => $newBalance]);
     }
 
-    private function calculateNewBalance(float $transactionValue, float $walletValue, string $type) : ?int
+    private function calculateNewBalance(float $transactionValue, float $walletValue, string $type) : ?float
     {
         switch ($type) {
             case 'debit':
