@@ -176,6 +176,10 @@
                                             "user",
                                             "merchant"
                                         ]
+                                    },
+                                    "balance": {
+                                        "type": "number",
+                                        "example": 100.5
                                     }
                                 },
                                 "type": "object"

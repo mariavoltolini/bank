@@ -29,7 +29,9 @@ class UsersController extends Controller
      *              @OA\Property(property="email", type="string", format="email"),
      *              @OA\Property(property="document", type="string", format="regex", pattern="^[0-9]+$", minLength=11, maxLength=14),
      *              @OA\Property(property="password", type="string", minLength=6, maxLength=12),
-     *              @OA\Property(property="type", type="string", enum={"user", "merchant"})
+     *              @OA\Property(property="type", type="string", enum={"user", "merchant"}),
+     *              @OA\Property(property="balance", type="number", example=100.50),
+
      *          ),
      *      ),
      *     @OA\Response(
