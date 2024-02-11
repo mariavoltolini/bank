@@ -133,22 +133,31 @@ Vendor/: Contém as dependências do projeto, gerenciadas pelo Composer.
 
 - Docker
 - Docker Compose
-- Composer
 
 ---
 ## Instalação 
 
 1. **Clonar o repositório**: Primeiro, você deve clonar esse repositório em sua máquina local.
 
-2. **Configurar o arquivo `.env`**: Após o clone do repositório, gere o arquivo `.env` seguindo o padrão de `.env.example`. Certifique-se de configurar corretamente todas as variáveis necessárias no arquivo `.env` antes de prosseguir para os próximos passos.
+2. **Configurar o arquivo `.env`**: Após o clone do repositório, gere o arquivo `.env` seguindo o padrão de `.env.example`. Certifique-se de configurar corretamente todas as variáveis necessárias no arquivo `.env` antes de prosseguir para os próximos passos. Deixo abaixo um exemplo para configuração de banco de dados de teste no Docker:
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_DATABASE=bank
+    DB_USERNAME=sail
+    DB_PASSWORD=password
+    
+    TRANSACTION_AUTH_URL="https://run.mocky.io/v3/5794d450-d2e2-4412-8131-73d0293ac1cc"
+    TRANSACTION_SEND_EMAIL_URL="https://run.mocky.io/v3/54dc2cf1-3add-45b5-b5a9-6bf7e7f1f4a6"
+    ```
 
-3. **Verificar dependências do Docker e Composer**: Antes de continuar, certifique-se de ter o Docker e o Docker Compose e o Composer instalados em sua máquina. Se não estiverem instalados, siga as instruções de instalação fornecidas na documentação oficial.
+3. **Verificar dependências do Docker**: Antes de continuar, certifique-se de ter o Docker e o Docker Compose instalados em sua máquina. Se não estiverem instalados, siga as instruções de instalação fornecidas na documentação oficial.
 
 4. **Executar comandos no terminal**:
 
-    ```bash
-    composer i
-    docker-compose build
+    ```
+    docker run --rm --interactive --tty --volume $PWD:/app --user $(id -u):$(id -g) composer install
     ./vendor/bin/sail up
     ./vendor/bin/sail artisan migrate
     ```
