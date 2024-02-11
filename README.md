@@ -131,16 +131,27 @@ Vendor/: Contém as dependências do projeto, gerenciadas pelo Composer.
 
 - Docker
 - Docker Compose
+- Composer
 
 ---
 ## Instalação 
 
-- 1- Primeiro você deve clonar esse repositório em sua máquina.
-- 2- Após instalação dos requitos, você deve executar os comandos abaixo em seu terminal (no diretório do projeto):
-```
-./vendor/bin/sail up
-./vendor/bin/sail artisan migrate
-```
+1. **Clonar o repositório**: Primeiro, você deve clonar esse repositório em sua máquina local.
+
+2. **Configurar o arquivo `.env`**: Após o clone do repositório, gere o arquivo `.env` seguindo o padrão de `.env.example`. Certifique-se de configurar corretamente todas as variáveis necessárias no arquivo `.env` antes de prosseguir para os próximos passos.
+
+3. **Verificar dependências do Docker e Composer**: Antes de continuar, certifique-se de ter o Docker e o Docker Compose e o Composer instalados em sua máquina. Se não estiverem instalados, siga as instruções de instalação fornecidas na documentação oficial.
+
+4. **Executar comandos no terminal**:
+
+    ```bash
+    composer i
+    docker-compose build
+    ./vendor/bin/sail up
+    ./vendor/bin/sail artisan migrate
+    ```
+
+    Certifique-se de executar esses comandos no diretório do projeto.
 
 ---
 ## Testes
