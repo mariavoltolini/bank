@@ -1,7 +1,9 @@
 # API Bank Pay  
 
 
- Essa API é estruturada para realizar transações entre clientes.
+Essa é uma aplicação com o objetivo de processar transações entre usuários.
+A aplicação é composta por um endpoint principal de processamento de transações. E contém um endpoint auxiliar para criar usuários de teste.
+
  
 ---
 ## Regras de Negócio   
@@ -10,45 +12,45 @@
 
 ### Cadastro de usuário:  
 
-- Existem dois tipos de clientes: regulares e comerciantes.  
+- Existem dois tipos de usuários: regulares e comerciantes.  
 
 - Nome Completo, CPF/CNPJ, E-mail e Senha são campos obrigatórios para ambos os tipos de usuários: usuários regulares e comerciantes.  
 
-- CPF/CNPJ (Cadastro Nacional da Pessoa Jurídica) e e-mails são únicos no sistema, permitindo apenas um cadastro por CPF ou endereço de e-mail.  
+- O sistema não permite mais de um usuário com o mesmo CPF/CNPJ ou o mesmo endereço de E-mail.  
 
   
 
 ### Transferência de dinheiro:  
 
-- Os usuários podem enviar dinheiro (fazer transferências) tanto para comerciantes quanto para outros usuários.  
+- Usuários podem enviar dinheiro para comerciantes ou para outros usuários.
 
-- Os comerciantes recebem apenas transferências; eles não podem enviar dinheiro para ninguém.  
+- Os comerciantes apenas recebem transferências; eles não podem enviar dinheiro para ninguém.  
 
   
 
 ### Validação de saldo:  
 
-- Antes de concluir uma transferência, o sistema valida se o cliente possui saldo suficiente em sua carteira.  
+- Antes de concluir uma transferência, o sistema valida se o usuário possui saldo suficiente em sua carteira.  
 
   
 
 ### Autorização Externa:  
 
-- Antes de finalizar uma transferência, o sistema consulta um serviço de autorização externo para autorizar ou não a transferência.  
+- Antes de finalizar uma transferência, o sistema consulta um serviço de autorização externo para autorizar a transferência.  
 
   
 
 ### Tratamento de transações:  
 
- - A operação de transferência é uma transação, ou seja, é reversível em caso de alguma inconsistência e o valor devolvido a carteira do cliente.  
+ - A operação de transferência é uma transação, ou seja, é reversível em caso de alguma inconsistência e o valor devolvido à carteira do cliente.  
 
   
 
 ### Notificação sobre recibo de pagamento:  
 
-- Ao receber o pagamento, tanto usuários quanto comerciantes deverão receber uma notificação. As notificações são enviadas por e-mail por meio de um serviço terceirizado.   
+- Ao processar uma transação, o sistema envia uma notificação por e-mail para o usuário recebedor através de um serviço externo.    
 
-- O serviço de notificação de terceiros pode ocasionalmente estar indisponível ou instável, por isso, é gerado um registro no banco de dados, para salvar essa informação.  
+- Como o serviço de notificação externo pode ocasionalmente estar indisponível ou instável, o sistema armazena no banco de dados um log do status de envio para possibilitar a futura criação de um serviço de reenvio. 
 
   
 
