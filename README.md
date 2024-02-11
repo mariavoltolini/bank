@@ -136,7 +136,7 @@ Vendor/: Contém as dependências do projeto, gerenciadas pelo Composer.
 ## Instalação 
 
 - 1- Primeiro você deve clonar esse repositório em sua máquina.
-- 2- Após instalação dos requitos, você deve executar os comandos abaixo em seu terminar (no diretório do projeto):
+- 2- Após instalação dos requitos, você deve executar os comandos abaixo em seu terminal (no diretório do projeto):
 ```
 ./vendor/bin/sail up
 ./vendor/bin/sail artisan migrate
