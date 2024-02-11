@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
+use App\Exceptions\BusinessException;
 
 class UserTypeVerificationService
 {
@@ -15,11 +14,7 @@ class UserTypeVerificationService
             case 'merchant':
                 return 2;
             default:
-                $response = new JsonResponse([
-                    'message' => 'invalid user type!',
-                ], 422);
-
-                throw new HttpResponseException($response);
+                throw new BusinessException('Invalid user type!');
         }
     }
 }

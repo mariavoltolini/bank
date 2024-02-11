@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Exceptions\BusinessException;
 use App\Services\UserTypeVerificationService;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use PHPUnit\Framework\TestCase;
 
@@ -31,14 +31,13 @@ class UserTypeVerificationServiceTest extends TestCase
     {
         $service = new UserTypeVerificationService();
 
-        $this->expectException(HttpResponseException::class);
+        $this->expectException(BusinessException::class);
 
         try {
             $service->verify('invalid_type');
-        } catch (HttpResponseException $exception) {
-            $response = $exception->getResponse();
-            $this->assertInstanceOf(JsonResponse::class, $response);
-            $this->assertEquals(422, $response->getStatusCode());
+        } catch (BusinessException $exception) {
+            $response = $exception->getCode();
+            $this->assertEquals(422, $response);
 
             throw $exception;
         }

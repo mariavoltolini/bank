@@ -3,8 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\WalletsRepository;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
+use App\Exceptions\BusinessException;
 
 class WalletsService
 {
@@ -18,11 +17,7 @@ class WalletsService
         $wallet = $this->walletsRepo->findByUserId($userId);
 
         if (!$wallet) {
-            $response = new JsonResponse([
-                'message' => "The customer's wallet was not found",
-            ], 400);
-
-            throw new HttpResponseException($response);
+            throw new BusinessException("The customer's wallet was not found!");
         }
 
         $newBalance = $this->calculateNewBalance($value, $wallet->balance, $type);
@@ -30,7 +25,7 @@ class WalletsService
         $this->walletsRepo->update($userId, ['balance' => $newBalance]);
     }
 
-    private function calculateNewBalance(float $transactionValue, float $walletValue, string $type) : ?float
+    private function calculateNewBalance(float $transactionValue, float $walletValue, string $type): ?float
     {
         switch ($type) {
             case 'debit':

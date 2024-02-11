@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Exceptions\AuthorizationException;
+use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionsRequest;
 use App\Services\TransactionsService;
@@ -13,7 +15,7 @@ class TransactionsController extends Controller
     {
     }
 
-   /**
+    /**
      * @OA\Post(
      *     path="/api/v1/transactions",
      *     summary="Create new transaction",
@@ -63,11 +65,20 @@ class TransactionsController extends Controller
      */
     public function store(TransactionsRequest $request): JsonResponse
     {
-        $transactionData = $request->validated();
-        $this->transactionServ->createTransaction($transactionData);
+        try {
+            $transactionData = $request->validated();
 
-        return response()->json([
-            'message' => 'Transaction created successfully!',
-        ], 201);
+            $this->transactionServ->createTransaction($transactionData);
+
+            return response()->json([
+                'message' => 'Transaction created successfully!',
+            ], 201);
+        } catch (BusinessException | AuthorizationException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }

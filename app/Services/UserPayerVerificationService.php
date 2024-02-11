@@ -2,19 +2,14 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
+use App\Exceptions\AuthorizationException;
 
 class UserPayerVerificationService
 {
     public function verify(int $type): void
     {
         if ($type == 2) {
-            $response = new JsonResponse([
-                'message' => 'This type of user is not authorized to carry out transactions',
-            ], 403);
-
-            throw new HttpResponseException($response);
+            throw new AuthorizationException('This type of user is not authorized to carry out transactions');
         }
     }
 }

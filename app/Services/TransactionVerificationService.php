@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
+use App\Exceptions\AuthorizationException;
 
 class TransactionVerificationService
 {
@@ -27,16 +26,9 @@ class TransactionVerificationService
                 }
             }
 
-            $response = new JsonResponse([
-                'message' => 'Unauthorized transaction!',
-            ], 403);
-            throw new HttpResponseException($response);
-
+            throw new AuthorizationException('Unauthorized transaction!');
         } catch (\Exception $e) {
-            $response = new JsonResponse([
-                'message' => 'Unauthorized transaction!',
-            ], 403);
-            throw new HttpResponseException($response);
+            throw new AuthorizationException('Unauthorized transaction!');
         }
     }
 }

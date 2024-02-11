@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Exceptions\AuthorizationException;
+use App\Exceptions\BusinessException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequest;
 use App\Services\UsersService;
@@ -54,12 +56,21 @@ class UsersController extends Controller
      */
     public function store(UsersRequest $request): JsonResponse
     {
-        $userData = $request->validated();
-        $id = $this->usersServ->createUser($userData);
+        try {
+            $userData = $request->validated();
 
-        return response()->json([
-            'message' => 'User created successfully!',
-            'id' => $id
-        ], 201);
+            $id = $this->usersServ->createUser($userData);
+
+            return response()->json([
+                'message' => 'User created successfully!',
+                'id' => $id
+            ], 201);
+        } catch (BusinessException | AuthorizationException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }
