@@ -124,6 +124,31 @@ Vendor/: Contém as dependências do projeto, gerenciadas pelo Composer.
 - MySQL
 - PHPUnit
 - Swagger
+- Docker
+
+---
+## Requisitos
+
+- Docker
+- Docker Compose
+
+---
+## Instalação 
+
+- 1- Primeiro você deve clonar esse repositório em sua máquina.
+- 2- Após instalação dos requitos, você deve executar os comandos abaixo em seu terminar (no diretório do projeto):
+```
+./vendor/bin/sail up
+./vendor/bin/sail artisan migrate
+```
+
+---
+## Testes
+
+- Para realizar os testes unitários e de integração, execute em seu terminal (no diretório do projeto) o comando abaixo:
+```
+./vendor/bin/sail artisan test 
+```
 
 
 
