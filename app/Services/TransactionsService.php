@@ -47,11 +47,11 @@ class TransactionsService
             $this->transactionVerifyServ->verify($transaction);
 
             $this->database->commit();
-
-            $this->sendEmailServ->sendEmail($newTransaction->id, $transaction['receiver_id']);
         } catch (\Exception $e) {
             $this->database->rollback();
             throw $e;
         }
+
+        $this->sendEmailServ->sendEmail($newTransaction->id, $transaction['receiver_id']);
     }
 }
