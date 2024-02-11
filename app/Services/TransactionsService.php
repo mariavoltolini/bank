@@ -47,6 +47,7 @@ class TransactionsService
             $this->transactionVerifyServ->verify($transaction);
 
             $this->database->commit();
+
         } catch (\Exception $e) {
             $this->database->rollback();
             throw $e;

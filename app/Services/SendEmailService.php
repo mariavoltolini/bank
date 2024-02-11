@@ -14,27 +14,31 @@ class SendEmailService
     ) {
     }
 
-    public function sendEmail(int $transactionId, string $userId): bool
+    public function sendEmail(int $transactionId, string $userId): void
     {
-        $url = env('TRANSACTION_SEND_EMAIL_URL');
+        try
+        {
+            $url = env('TRANSACTION_SEND_EMAIL_URL');
 
-        $user = $this->usersRepo->findById($userId);
+            $user = $this->usersRepo->findById($userId);
 
-        $emailData = $this->prepareEmailData($user);
+            $emailData = $this->prepareEmailData($user);
 
-        $response = $this->apiServ->post($url, $emailData);
+            $response = $this->apiServ->post($url, $emailData);
 
-        if ($response->successful()) {
-            $jsonData = $response->json();
+            if ($response->successful()) {
+                $jsonData = $response->json();
 
-            if ($jsonData['message'] === true) {
-                $this->createEmailTransactionLog($transactionId, true);
-                return true;
+                if ($jsonData['message'] === true) {
+                    $this->createEmailTransactionLog($transactionId, true);
+                    return;
+                }
             }
-        }
+            $this->createEmailTransactionLog($transactionId, false);
 
-        $this->createEmailTransactionLog($transactionId, false);
-        return false;
+        } catch (\Exception $e) {
+            $this->createEmailTransactionLog($transactionId, false);
+        }
     }
 
     private function prepareEmailData($user): array

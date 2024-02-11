@@ -11,24 +11,32 @@ class TransactionVerificationService
     {
     }
 
-    public function verify(array $transaction): ?bool
+    public function verify(array $transaction): void
     {
-        $transactionAuthUrl = env('TRANSACTION_AUTH_URL');
+        try
+        {
+            $transactionAuthUrl = env('TRANSACTION_AUTH_URL');
 
-        $return = $this->apiServ->post($transactionAuthUrl, $transaction);
+            $return = $this->apiServ->post($transactionAuthUrl, $transaction);
 
-        if ($return->successful()) {
-            $jsonData = $return->json();
+            if ($return->successful()) {
+                $jsonData = $return->json();
 
-            if ($jsonData['message'] === 'Autorizado') {
-                return true;
+                if ($jsonData['message'] === 'Autorizado') {
+                    return;
+                }
             }
+
+            $response = new JsonResponse([
+                'message' => 'Unauthorized transaction!',
+            ], 403);
+            throw new HttpResponseException($response);
+
+        } catch (\Exception $e) {
+            $response = new JsonResponse([
+                'message' => 'Unauthorized transaction!',
+            ], 403);
+            throw new HttpResponseException($response);
         }
-
-        $response = new JsonResponse([
-            'message' => 'Unauthorized transaction!',
-        ], 403);
-
-        throw new HttpResponseException($response);
     }
 }
