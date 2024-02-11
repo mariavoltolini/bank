@@ -27,6 +27,7 @@ class CreateUserTest extends TestCase
             'name' => $user->name,
             'email' => $user->email,
             'document' => $user->document,
+            'balance' => 0,
             'password' => 'password',
             'type' => $type,
         ]);
@@ -49,6 +50,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'email' => $user->email,
+            'balance' => 0,
             'document' => $user->document,
             'password' => 'password',
             'type' => $type,
@@ -65,6 +67,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => " ",
+            'balance' => 0,
             'email' => $user->email,
             'document' => $user->document,
             'password' => 'password',
@@ -83,6 +86,7 @@ class CreateUserTest extends TestCase
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
             'email' => 'ddddd',
+            'balance' => 0,
             'document' => $user->document,
             'password' => 'password',
             'type' => $type,
@@ -99,6 +103,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
+            'balance' => 0,
             'document' => $user->document,
             'password' => 'password',
             'type' => $type,
@@ -115,6 +120,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
+            'balance' => 0,
             'email' => $user->email,
             'document' => $user->document,
             'password' => 'password',
@@ -132,6 +138,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
+            'balance' => 0,
             'email' => $user->email,
             'document' => $user->document,
             'password' => 'password',
@@ -149,6 +156,7 @@ class CreateUserTest extends TestCase
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
             'email' => $user->email,
+            'balance' => 0,
             'document' => '123456789.3',
             'password' => 'password',
             'type' => $type,
@@ -166,6 +174,7 @@ class CreateUserTest extends TestCase
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
             'email' => $user->email,
+            'balance' => 0,
             'document' => '1234567911',
             'password' => 'password',
             'type' => $type,
@@ -182,6 +191,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
+            'balance' => 0,
             'email' => $user->email,
             'document' => '123456791112345',
             'password' => 'password',
@@ -199,6 +209,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
+            'balance' => 0,
             'email' => $user->email,
             'password' => 'password',
             'type' => $type,
@@ -215,6 +226,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
+            'balance' => 0,
             'email' => $user->email,
             'document' => $user->document,
             'password' => '1234',
@@ -232,11 +244,47 @@ class CreateUserTest extends TestCase
 
         $response = $this->postJson('/api/v1/users', [
             'name' => $user->name,
+            'balance' => 0,
             'email' => $user->email,
             'document' => $user->document,
             'type' => $type,
         ]);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['password']);
+    }
+
+    public function testCreateUserWithWithoutBalanceError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'document' => $user->document,
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['balance']);
+    }
+
+    public function testCreateUserWithBalanceError()
+    {
+        $user = User::factory()->make();
+
+        $type = $user->type == 1 ? 'user' : 'merchant';
+
+        $response = $this->postJson('/api/v1/users', [
+            'name' => $user->name,
+            'balance' => -0.01,
+            'email' => $user->email,
+            'document' => $user->document,
+            'password' => 'password',
+            'type' => $type,
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['balance']);
     }
 }

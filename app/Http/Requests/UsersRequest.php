@@ -30,6 +30,7 @@ class UsersRequest extends FormRequest
             'document' => 'required|string|unique:users,document|regex:/^[0-9]+$/|min:11|max:14',
             'password' => 'required|string|min:6|max:12',
             'type' => 'required|string|in:user,merchant',
+            'balance' => 'required|numeric|gte:0|regex:/^\d+(.\d{1,2})?$/',
         ];
     }
 

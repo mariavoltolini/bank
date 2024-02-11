@@ -40,7 +40,7 @@ class UsersService
 
             $arrayWallet = [
                 'user_id' => $uuid,
-                'balance' => 0
+                'balance' => $user['balance']
             ];
 
             $this->walletsRepo->create($arrayWallet);
