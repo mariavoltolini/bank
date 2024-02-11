@@ -37,6 +37,7 @@ class UsersController extends Controller
      *         description="User created successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="User created successfully!"),
+     *             @OA\Property(property="id", type="string", example="9bc22136-5dc2-4436-94ca-c39400af230b"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -52,10 +53,11 @@ class UsersController extends Controller
     public function store(UsersRequest $request): JsonResponse
     {
         $userData = $request->validated();
-        $this->usersServ->createUser($userData);
+        $id = $this->usersServ->createUser($userData);
 
         return response()->json([
             'message' => 'User created successfully!',
+            'id' => $id
         ], 201);
     }
 }

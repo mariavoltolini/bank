@@ -193,6 +193,10 @@
                                         "message": {
                                             "type": "string",
                                             "example": "User created successfully!"
+                                        },
+                                        "id": {
+                                            "type": "string",
+                                            "example": "9bc22136-5dc2-4436-94ca-c39400af230b"
                                         }
                                     },
                                     "type": "object"

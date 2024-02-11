@@ -18,7 +18,7 @@ class UsersService
     {
     }
 
-    public function createUser(array $user): void
+    public function createUser(array $user): ?string
     {
         $this->database->beginTransaction();
 
@@ -46,6 +46,8 @@ class UsersService
             $this->walletsRepo->create($arrayWallet);
 
             $this->database->commit();
+
+            return $uuid;
         } catch (\Exception $e) {
             $this->database->rollBack();
             throw $e;
